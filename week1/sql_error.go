@@ -15,13 +15,13 @@ var (
 var normalQuery = func(name string) (age int, err error) {
 	err = db.QueryRow("SELECT age FROM users WHERE name=?", name).Scan(&age)
 	if err != nil {
-		err = fmt.Errorf("no user with name: %v：%w ", name, err)
+		err = fmt.Errorf("no such user: %v; %w ", name, err)
 	}
 	return age, err
 }
 
 var mockQuery = func(name string) (age int, err error) {
-	return 0, sql.ErrNoRows
+	return 0, fmt.Errorf("no such user: %v; %w ", name, sql.ErrNoRows)
 }
 
 func QueryAgeByName(name string) (age int, err error) {
@@ -37,7 +37,7 @@ func main() {
 	name := "lumoping"
 	age, err := QueryAgeByName(name)
 	if errors.Is(err, sql.ErrNoRows) {
-		log.Printf("query user age, no user named : %v", name)
+		log.Printf("Cannot get user %v'age, cause:  %v", name, err)
 	} else {
 		log.Printf("user %v's age : %v", name, age)
 	}
