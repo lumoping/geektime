@@ -1,0 +1,7 @@
+syntax = "proto3";
+package api.pb;
+option go_package = "/pb";
+
+message Student {
+  string name = 1;
+}
